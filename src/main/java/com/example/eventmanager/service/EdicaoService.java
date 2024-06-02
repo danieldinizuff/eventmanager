@@ -1,7 +1,9 @@
 package com.example.eventmanager.service;
 
 import com.example.eventmanager.model.Edicao;
+import com.example.eventmanager.model.Event;
 import com.example.eventmanager.repository.EdicaoRepository;
+import com.example.eventmanager.repository.EventRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,7 +15,12 @@ public class EdicaoService {
     @Autowired
     private EdicaoRepository edicaoRepository;
 
-    public Edicao salvar(Edicao edicao) {
+    @Autowired
+    private EventRepository eventRepository;
+
+    public Edicao salvar(Edicao edicao, Long eventoId) {
+        Event evento = eventRepository.findById(eventoId).orElseThrow(() -> new RuntimeException("Evento não encontrado"));
+        edicao.setEvento(evento);
         return edicaoRepository.save(edicao);
     }
 
