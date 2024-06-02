@@ -12,15 +12,22 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+
 @RestController
-@RequestMapping("/api/events")
-@Api(value = "API de Gerenciamento de Eventos", description = "Endpoints para Gerenciamento de Eventos")
+@RequestMapping("/api/eventos")
+@Api(value = "Eventos", tags = {"Eventos"})
 public class EventController {
     @Autowired
     private EventService eventService;
 
     @PostMapping
-    @ApiOperation(value = "Lista todos os eventos", notes = "Retorna uma lista de todos os eventos")
+    @ApiOperation(value = "Cadastrar um novo evento", response = Event.class)
+    @ApiResponses(value = {
+        @ApiResponse(code = 201, message = "Evento cadastrado com sucesso"),
+        @ApiResponse(code = 400, message = "Dados inválidos")
+    })
     public ResponseEntity<Event> createEvent(@RequestBody Event event) {
         Event createdEvent = eventService.createEvent(event);
         return new ResponseEntity<>(createdEvent, HttpStatus.CREATED);
