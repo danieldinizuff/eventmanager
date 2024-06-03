@@ -1,6 +1,5 @@
-// src/main/java/com/example/eventmanager/controller/EventController.java
 package com.example.eventmanager.controller;
-import java.util.List;
+
 
 import com.example.eventmanager.model.Favorite;
 import com.example.eventmanager.model.Atividade;
@@ -8,7 +7,22 @@ import com.example.eventmanager.model.Usuario;
 import com.example.eventmanager.service.FavoriteService;
 import com.example.eventmanager.service.UsuarioService;
 
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.web.bind.annotation.*;
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
+
+
+import org.springframework.web.bind.annotation.*;
+import java.util.*;
+
 import com.example.eventmanager.dto.UsuarioDTO;
+
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -18,7 +32,6 @@ import io.swagger.v3.oas.annotations.Parameter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/usuario")
@@ -95,7 +108,7 @@ public class UsuarioController {
     }
 
     @DeleteMapping("/{usuarioId}/favorite/{atividadeId}")
-    @Operation(summary = "UsuÃ¡rio desfavorita uma Atividade")
+    @Operation(summary = "Usuário desfavorita uma Atividade")
     public ResponseEntity<String> unfavoriteAtividade(@PathVariable Long usuarioId, @PathVariable Long atividadeId) {
         try {
             favoriteService.removeFavorite(usuarioId, atividadeId);
@@ -122,6 +135,47 @@ public class UsuarioController {
                     .body("Ocorreu um erro ao listar as atividades favoritas. Por favor, tente novamente mais tarde.");
         }
     }
+    @PostMapping("/enviarMensagem")
+    public void enviarMensagem(@RequestBody Usuario usuario) {
+        if (usuario != null) {
+            LocalDateTime horaAtual = LocalDateTime.now();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            for (Atividade atividade : usuario.getAtividadesFavoritas()) {
+                LocalDateTime horaAtividade = LocalDateTime.parse(atividade.getHorario(), formatter);
+                if (horaAtividade.minusHours(1).isBefore(horaAtual)) {
+                    enviarEmail(usuario.getEmail(), atividade);
+                }
+            }
+        } else {
+            System.out.println("Usuário não encontrado.");
+        }
+    }
+
+    private void enviarEmail(String destinatario, Atividade atividade) {
+        MimeMessage message = emailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message);
+        try {
+            helper.setTo(destinatario);
+            helper.setSubject("Atividade Favorita em 1 Hora");
+            helper.setText("Você tem uma atividade favorita começando em 1 hora:\n" +
+                    "Nome: " + atividade.getNome() + "\n" +
+                    "Horário: " + atividade.getHorario() + "\n" +
+                    "Local: " + atividade.getLocal() + "\n");
+            emailSender.send(message);
+            System.out.println("Mensagem enviada com sucesso para: " + destinatario);
+        } catch (MessagingException e) {
+            System.out.println("Erro ao enviar mensagem para: " + destinatario);
+            e.printStackTrace();
+        }
+    }
+    }
+
+  
+     
+
+    }
+
+   
 
 
-}
+

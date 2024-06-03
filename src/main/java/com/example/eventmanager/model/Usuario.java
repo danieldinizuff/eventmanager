@@ -113,4 +113,11 @@ public class Usuario {
         }
     }
 
+    public Atividade[] getAtividadesFavoritas() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getAtividadesFavoritas'");
+    }
+
+ 
+
 }
