@@ -11,7 +11,7 @@ Projeto de implementação de uma API Rest feito para a disciplina Desenvolvimen
 
 ## Sobre o projeto
 
-A API foi implementada em Java e utilizamos framework Spring.
+A API foi implementada em Java e utilizamos framework Spring
 
 ## Execução do projeto
 
