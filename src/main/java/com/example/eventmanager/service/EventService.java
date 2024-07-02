@@ -5,6 +5,7 @@ import com.example.eventmanager.model.Event;
 import com.example.eventmanager.repository.EventRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import java.util.Optional;
 
 import java.util.List;
 
@@ -21,8 +22,8 @@ public class EventService {
         return eventRepository.findAll();
     }
 
-    public Event buscarPorId(Long id) {
-        return eventRepository.findById(id).orElse(null);
+    public Optional<Event> buscarPorId(Long id) {
+        return eventRepository.findById(id);
     }
 
     public void deletar(Long id) {
