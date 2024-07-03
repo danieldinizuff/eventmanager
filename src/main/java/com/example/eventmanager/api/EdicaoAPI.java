@@ -10,9 +10,11 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -85,7 +87,7 @@ public class EdicaoAPI {
                     examples = @ExampleObject(value = "{\"numero\": 1, \"ano\": 2021, \"dataInicial\": \"2021-01-01\", \"dataFinal\": \"2021-01-10\", \"cidade\": \"Cidade Exemplo\"}"),
                     schema = @Schema(implementation = EdicaoDTO.class)))
     public ResponseEntity<EdicaoDTO> obterDetalhesEdicao(
-            @PathVariable long eventoId,
+            //@PathVariable long eventoId,
             @PathVariable long edicaoId) {
         Edicao edicao = edicaoService.buscarPorId(edicaoId);
         if (edicao == null) {
@@ -107,6 +109,21 @@ public class EdicaoAPI {
                 edicao.getLinkInscricoes());
 
         return ResponseEntity.status(HttpStatus.OK).body(edicaoDTO);
+    }
+    
+    @PutMapping("/{id}")
+    public ResponseEntity<Edicao> atualizarEdicao(@PathVariable Long id, @RequestBody EdicaoDTO edicaoDTO) {
+        Optional<Edicao> edicao = edicaoService.atualizarEdicao(id, edicaoDTO);
+        return edicao.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deletarEdicao(@PathVariable Long id) {
+        boolean isRemoved = edicaoService.deletarEdicao(id);
+        if (!isRemoved) {
+            return ResponseEntity.status(404).body("Edição não encontrada.");
+        }
+        return ResponseEntity.status(204).body("Edição removida com sucesso.");
     }
 
 }

@@ -36,7 +36,35 @@ public class EventoService {
      public List<EventoDTO> listarEventos() {
         List<Evento> eventos = eventoRepository.findAll();
         return eventos.stream()
-                .map(evento -> new EventoDTO(evento.getNome(), evento.getSigla(), evento.getDescricao()))
+                .map(evento -> new EventoDTO(evento.getNome(), evento.getSigla(), evento.getDescricao(), evento.getCaminho()))
                 .collect(Collectors.toList());
     }
+
+
+    public Optional<Evento> atualizarEvento(Long id, EventoDTO eventoDTO) {
+        Optional<Evento> optionalEvento = eventoRepository.findById(id);
+        if (optionalEvento.isPresent()) {
+            Evento evento = optionalEvento.get();
+            evento.setNome(eventoDTO.getNome());
+            evento.setSigla(eventoDTO.getSigla());
+            evento.setDescricao(eventoDTO.getDescricao());
+            evento.setCaminho(eventoDTO.getCaminho());
+            return Optional.of(eventoRepository.save(evento));
+        } else {
+            return Optional.empty();
+        }
+    }
+
+
+    public boolean deletarEvento(Long id) {
+        Optional<Evento> optionalEvento = eventoRepository.findById(id);
+        if (optionalEvento.isPresent()) {
+            eventoRepository.deleteById(id);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+
 }

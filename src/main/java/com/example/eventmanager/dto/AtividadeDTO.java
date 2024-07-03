@@ -1,24 +1,39 @@
 package com.example.eventmanager.dto;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
+
 import com.example.eventmanager.model.Atividade;
 import com.example.eventmanager.model.Atividade.TipoAtividade;
+import com.fasterxml.jackson.annotation.JsonFormat;
+
+import io.swagger.v3.oas.annotations.media.Schema;
 
 public class AtividadeDTO {
     private Long id;
     private String nome;
-    private TipoAtividade tipo;
+    private String tipo;
 
-    private String data;
-    private String horarioInicial;
-    private String horarioFinal;
+    private LocalDate  data;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm:ss")
+    private LocalTime  horaInicio;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm:ss")
+    private LocalTime horaFim;
 
-    public AtividadeDTO(Atividade atividade) {
-        this.id = atividade.getId();
-        this.nome = atividade.getNome();
-        this.tipo = atividade.getTipo();
-        this.data = atividade.getData().toString();
-        this.horarioInicial = atividade.getHorarioInicial().toString();
-        this.horarioFinal = atividade.getHorarioFinal().toString();
+    private String descricao;
+
+    public AtividadeDTO(){
+        
+    }
+
+    public AtividadeDTO(Long id, String nome, String tipo, LocalDate data, LocalTime horaInicio, LocalTime horaFim, String descricao) {
+        this.id = id;
+        this.nome = nome;
+        this.tipo = tipo;
+        this.data = data;
+        this.horaInicio = horaInicio;
+        this.horaFim = horaFim;
+        this.descricao = descricao;
     }
 
     public Long getId() {
@@ -37,35 +52,44 @@ public class AtividadeDTO {
         this.nome = nome;
     }
 
-    public TipoAtividade getTipo() {
+    public String getTipo() {
         return tipo;
     }
 
-    public void setTipo(TipoAtividade tipo) {
+    public void setTipo(String tipo) {
         this.tipo = tipo;
     }
 
-    public String getData() {
+    public LocalDate  getData() {
         return data;
     }
 
-    public void setData(String data) {
+    public void setData(LocalDate data) {
         this.data = data;
     }
 
-    public String getHorarioInicial() {
-        return horarioInicial;
+    public String getDescricao() {
+        return descricao;
     }
 
-    public void setHorarioInicial(String horarioInicial) {
-        this.horarioInicial = horarioInicial;
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
     }
 
-    public String getHorarioFinal() {
-        return horarioFinal;
+    public LocalTime getHoraInicio() {
+        return horaInicio;
     }
 
-    public void setHorarioFinal(String horarioFinal) {
-        this.horarioFinal = horarioFinal;
+    public void setHoraInicio(LocalTime horaInicio) {
+        this.horaInicio = horaInicio;
     }
+
+    public LocalTime getHoraFim() {
+        return horaFim;
+    }
+
+    public void setHoraFim(LocalTime horaFim) {
+        this.horaFim = horaFim;
+    }
+
 }

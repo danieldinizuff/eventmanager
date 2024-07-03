@@ -176,6 +176,26 @@ public class Edicao {
         this.linkInscricoes = linkInscricoes;
     }
 
+    public void setNumero(int numero) {
+        this.numero = numero;
+    }
+
+    public void setDataInicial(LocalDate dataInicial) {
+        this.dataInicial = dataInicial;
+    }
+
+    public void setCidade(String cidade) {
+        this.cidade = cidade;
+    }
+
+    public void setAno(int ano) {
+        this.ano = ano;
+    }
+
+    public void setDataFinal(LocalDate dataFinal) {
+        this.dataFinal = dataFinal;
+    }
+
     public void atualizarEdicao(String numero, String ano, LocalDate dataInicial, LocalDate dataFinal, String cidade) {
         if (numero != null && !numero.isEmpty()) {
             this.numero = Integer.parseInt(numero);

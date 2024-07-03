@@ -1,5 +1,6 @@
 package com.example.eventmanager.service;
 
+import com.example.eventmanager.dto.EspacoDTO;
 import com.example.eventmanager.model.Espaco;
 import com.example.eventmanager.repository.EspacoRepository;
 import org.springframework.stereotype.Service;
@@ -30,5 +31,28 @@ public class EspacoService {
 
     public void deleteEspaco(Long id) {
         espacoRepository.deleteById(id);
+    }
+
+    public Optional<Espaco> atualizarEspaco(Long id, EspacoDTO espacoDTO) {
+        Optional<Espaco> optionalEspaco = espacoRepository.findById(id);
+        if (optionalEspaco.isPresent()) {
+            Espaco espaco = optionalEspaco.get();
+            espaco.setNome(espacoDTO.getNome());
+            espaco.setLocalizacao(espacoDTO.getLocalizacao());
+            espaco.setCapacidade(espacoDTO.getCapacidade());
+            return Optional.of(espacoRepository.save(espaco));
+        } else {
+            return Optional.empty();
+        }
+    }
+
+    public boolean deletarEspaco(Long id) {
+        Optional<Espaco> optionalEspaco = espacoRepository.findById(id);
+        if (optionalEspaco.isPresent()) {
+            espacoRepository.deleteById(id);
+            return true;
+        } else {
+            return false;
+        }
     }
 }

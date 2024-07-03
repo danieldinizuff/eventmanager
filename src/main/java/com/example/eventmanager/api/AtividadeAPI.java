@@ -10,6 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
+import java.util.Optional;
+
 @RestController
 @RequestMapping("/atividades")
 @Tag(name = "Atividades", description = "Operações relacionadas a atividades")
@@ -41,9 +43,9 @@ public class AtividadeAPI {
 
     @PostMapping
     @Operation(summary = "Criar uma nova atividade")
-    public ResponseEntity<?> createAtividade(@RequestBody Atividade atividade) {
+    public ResponseEntity<?> createAtividade(@RequestBody AtividadeDTO atividade) {
         try {
-            Atividade savedAtividade = atividadeService.saveAtividade(atividade);
+            Atividade savedAtividade = atividadeService.criarAtividade(atividade);
             return ResponseEntity.ok(savedAtividade);
         } catch (Exception e) {
             // Log the exception for internal debugging
@@ -55,17 +57,33 @@ public class AtividadeAPI {
                     .body("Erro ao criar atividade: " + e.getMessage());
         }
     }
+    
+
+    //@PutMapping("/{id}")
+    //@Operation(summary = "Atualizar uma atividade pelo ID")
+    //public Atividade updateAtividade(@PathVariable Long id, @RequestBody Atividade atividade) {
+    //    atividade.setId(id);
+    //    return atividadeService.saveAtividade(atividade);
+    //}
+
+    //@DeleteMapping("/{id}")
+    //@Operation(summary = "Excluir uma atividade pelo ID")
+    //public void deleteAtividade(@PathVariable Long id) {
+    //    atividadeService.deleteAtividade(id);
+    //}
 
     @PutMapping("/{id}")
-    @Operation(summary = "Atualizar uma atividade pelo ID")
-    public Atividade updateAtividade(@PathVariable Long id, @RequestBody Atividade atividade) {
-        atividade.setId(id);
-        return atividadeService.saveAtividade(atividade);
+    public ResponseEntity<Atividade> atualizarAtividade(@PathVariable Long id, @RequestBody AtividadeDTO atividadeDTO) {
+        Optional<Atividade> atividade = atividadeService.atualizarAtividade(id, atividadeDTO);
+        return atividade.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @DeleteMapping("/{id}")
-    @Operation(summary = "Excluir uma atividade pelo ID")
-    public void deleteAtividade(@PathVariable Long id) {
-        atividadeService.deleteAtividade(id);
+    public ResponseEntity<Void> deletarAtividade(@PathVariable Long id) {
+        boolean isRemoved = atividadeService.deletarAtividade(id);
+        if (!isRemoved) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.noContent().build();
     }
 }

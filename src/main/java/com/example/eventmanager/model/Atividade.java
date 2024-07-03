@@ -2,6 +2,7 @@ package com.example.eventmanager.model;
 
 import jakarta.persistence.*;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Date;
 
@@ -17,16 +18,15 @@ public class Atividade {
     @Column(nullable = false)
     private String nome;
     
-    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private TipoAtividade tipo;
+    private String tipo;
     
     @Column(nullable = false)
     private String descricao;
     
     @Column(nullable = false)
     @Temporal(TemporalType.DATE)
-    private Date data;
+    private LocalDate  data;
 
     @Column(nullable = false)
     private LocalTime horarioInicial;
@@ -56,11 +56,11 @@ public class Atividade {
         this.nome = nome;
     }
 
-    public TipoAtividade getTipo() {
+    public String getTipo() {
         return tipo;
     }
 
-    public void setTipo(TipoAtividade tipo) {
+    public void setTipo(String tipo) {
         this.tipo = tipo;
     }
 
@@ -72,11 +72,11 @@ public class Atividade {
         this.descricao = descricao;
     }
 
-    public Date getData() {
+    public LocalDate  getData() {
         return data;
     }
 
-    public void setData(Date data) {
+    public void setData(LocalDate  data) {
         this.data = data;
     }
 
@@ -102,6 +102,22 @@ public class Atividade {
 
     public void setEdicao(Edicao edicao) {
         this.edicao = edicao;
+    }
+
+    public LocalTime getHoraFim() {
+        return horarioFinal;
+    }
+
+    public void setHoraFim(LocalTime horarioFinal) {
+        this.horarioFinal = horarioFinal;
+    }
+
+    public LocalTime getHoraInicio() {
+        return horarioInicial;
+    }
+
+    public void setHoraInicio(LocalTime horarioInicial) {
+        this.horarioInicial = horarioInicial;
     }
     
     // Construtores
